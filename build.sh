@@ -4,7 +4,8 @@ set -o errexit
 
 # Modify this line as needed for your package manager (pip, poetry, etc.)
 #pip install -r requirements.txt
-uv install
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv sync
 # Convert static asset files
 python manage.py collectstatic --no-input
 
