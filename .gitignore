@@ -1,6 +1,7 @@
 /.env
 /.venv
 /.idea
+/.vscode
 .python-version
 db.sqlite3
 /hexlet_code/__pycache__

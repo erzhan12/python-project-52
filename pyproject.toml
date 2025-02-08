@@ -11,3 +11,8 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "whitenoise>=6.9.0",
 ]
+
+[dependency-groups]
+dev = [
+    "flake8>=7.1.1",
+]
