@@ -7,8 +7,10 @@ requires-python = ">=3.12"
 dependencies = [
     "dj-database-url>=2.3.0",
     "django>=5.1.5",
+    "gunicorn>=23.0.0",
     "psycopg>=3.2.4",
     "python-dotenv>=1.0.1",
+    "uvicorn>=0.34.0",
     "whitenoise>=6.9.0",
 ]
 
