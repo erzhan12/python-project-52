@@ -8,7 +8,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 source $HOME/.local/bin/env
 make install
 # Convert static asset files
-python manage.py collectstatic --no-input
+make collectstatic
 
 # Apply any outstanding database migrations
-python manage.py migrate
+make migrate
