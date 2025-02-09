@@ -4,4 +4,7 @@
 /.vscode
 .python-version
 db.sqlite3
-hexlet_code/__pycache__
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
