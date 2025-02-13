@@ -14,4 +14,4 @@ migrate:
 	python manage.py migrate
 
 render-start:
-	gunicorn hexlet_code.wsgi
+	gunicorn task_manager.wsgi

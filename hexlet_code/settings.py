@@ -150,3 +150,10 @@ LANGUAGES = (
     ('en', 'English'),
     ('ru', 'Russian'),
 )
+
+STORAGES = {
+    # ...
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
