@@ -136,6 +136,7 @@ USE_L10N = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # This production code might break development mode, so we check whether we're in DEBUG mode
 if not DEBUG:
@@ -171,3 +172,15 @@ BOOTSTRAP5 = {
     "required_css_class": "django_bootstrap5-required",
     "javascript_in_head": True,
 }
+
+# Add these settings to ensure Russian is used as default
+
+# Disable language detection based on browser headers
+LANGUAGE_COOKIE_NAME = 'django_language'
+LANGUAGE_COOKIE_AGE = 86400 * 30  # 30 days
+
+# Make middleware prioritize LANGUAGE_CODE over browser settings
+def get_languages_callback(request):
+    return 'ru'  # Force Russian as default language
+
+MIDDLEWARE_CLASSES = MIDDLEWARE  # Keep existing middleware

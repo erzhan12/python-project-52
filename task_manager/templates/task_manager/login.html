@@ -1,0 +1,14 @@
+{% extends 'task_manager/base.html' %}
+{% load i18n django_bootstrap5 %}
+
+{% block content %}
+<h1 class="my-4">{% translate "Вход" %}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button type="submit" class="btn btn-primary">
+        {% translate "Войти" %}
+    </button>
+</form>
+{% endblock %} 
