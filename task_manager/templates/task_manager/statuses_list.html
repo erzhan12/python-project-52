@@ -1,0 +1,37 @@
+{% extends 'task_manager/base.html' %}
+{% load i18n %}
+
+{% block content %}
+<h1 class="my-4">{% translate "Статусы" %}</h1>
+
+<a href="{% url 'status_create' %}" class="btn btn-primary mb-3">{% translate "Создать статус" %}</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>{% translate "Имя" %}</th>
+            <th>{% translate "Дата создания" %}</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for status in statuses %}
+        <tr>
+            <td>{{ status.id }}</td>
+            <td>{{ status.name }}</td>
+            <td>{{ status.created_at|date:"d.m.Y H:i" }}</td>
+            <td>
+                <a href="{% url 'status_update' status.id %}">{% translate "Изменить" %}</a>
+                <br>
+                <a href="{% url 'status_delete' status.id %}">{% translate "Удалить" %}</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">{% translate "Статусы не найдены" %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %} 

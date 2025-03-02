@@ -6,6 +6,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
+from task_manager.models import Status
 
 
 class UserCRUDTestCase(TestCase):
@@ -108,8 +109,8 @@ class UserCRUDTestCase(TestCase):
             follow=True
         )
 
-        # Проверяем редирект
-        self.assertRedirects(response, reverse('users'))
+        # Проверяем редирект на главную страницу
+        self.assertRedirects(response, reverse('index'))
 
         # Проверяем, что данные НЕ обновились
         self.user2.refresh_from_db()
@@ -166,7 +167,7 @@ class UserCRUDTestCase(TestCase):
         )
 
         # Проверяем редирект
-        self.assertRedirects(response, reverse('users'))
+        self.assertRedirects(response, reverse('login'))
 
         # Проверяем, что пользователь НЕ был удален
         self.assertEqual(User.objects.count(), user_count)
@@ -176,5 +177,111 @@ class UserCRUDTestCase(TestCase):
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(
             str(messages[0]),
-            'У вас нет прав для удаления другого пользователя'
+            'Вы не авторизованы! Пожалуйста, выполните вход.'
         )
+
+
+class StatusCRUDTestCase(TestCase):
+    fixtures = ['task_manager/fixtures/statuses.json']
+
+    def setUp(self):
+        self.client = Client()
+        # Create a test user
+        self.test_user = User.objects.create_user(
+            username='testuser',
+            password='testpass123'
+        )
+        # Login for CRUD operations
+        self.client.login(username='testuser', password='testpass123')
+        self.status1 = Status.objects.get(name='new')
+        self.status2 = Status.objects.get(name='in progress')
+        self.status3 = Status.objects.get(name='done')
+
+    def test_status_list(self):
+        """Тест чтения списка статусов."""
+        response = self.client.get(reverse('statuses'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'new')
+        self.assertContains(response, 'in progress')
+        self.assertContains(response, 'done')
+
+    def test_status_create(self):
+        """Тест создания нового статуса."""
+        response = self.client.post(
+            reverse('status_create'),
+            data={'name': 'new_status'},
+            follow=True
+        )
+        self.assertRedirects(response, reverse('statuses'))
+        self.assertEqual(Status.objects.count(), 4)
+        self.assertTrue(Status.objects.filter(name='new_status').exists())
+
+    def test_status_update(self):
+        """Тест обновления статуса."""
+        response = self.client.post(
+            reverse('status_update', args=[self.status1.id]),
+            data={'name': 'updated_status'},
+            follow=True
+        )
+        self.assertRedirects(response, reverse('statuses'))
+        self.status1.refresh_from_db()
+        self.assertEqual(self.status1.name, 'updated_status')
+
+    def test_status_delete(self):
+        """Тест удаления статуса."""
+        response = self.client.post(
+            reverse('status_delete', args=[self.status1.id]),
+            follow=True
+        )
+        self.assertRedirects(response, reverse('statuses'))
+        self.assertEqual(Status.objects.count(), 2)
+        self.assertFalse(Status.objects.filter(id=self.status1.id).exists())
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]), 'Статус успешно удален')
+
+    def test_status_delete_permission(self):
+        """Тест прав доступа: пользователь может удалить
+        только свой статус."""
+        # Logout first
+        self.client.logout()
+
+        response = self.client.post(
+            reverse('status_delete', args=[self.status1.id]),
+            follow=True
+        )
+        self.assertRedirects(response, reverse('login'))
+        self.assertEqual(Status.objects.count(), 3)
+        self.assertTrue(Status.objects.filter(id=self.status1.id).exists())
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]),
+                         'Вы не авторизованы! Пожалуйста, выполните вход.')
+
+    def test_status_update_permission(self):
+        """Test that unauthorized users cannot update statuses."""
+        # Logout first
+        self.client.logout()
+
+        # Try to update a status without being logged in
+        update_data = {
+            'name': 'unauthorized_update'
+        }
+
+        # Get initial status value to verify it doesn't change
+        original_name = self.status1.name
+
+        response = self.client.post(
+            reverse('status_update', args=[self.status1.id]),
+            data=update_data,
+            follow=True
+        )
+
+        # Check redirect to login page
+        self.assertRedirects(response, reverse('login'))
+        # Verify status was not updated
+        self.status1.refresh_from_db()
+        self.assertEqual(self.status1.name, original_name)
+
+        # Check for error message
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]),
+                         'Вы не авторизованы! Пожалуйста, выполните вход.')

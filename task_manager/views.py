@@ -11,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from .models import Status
 
 
 def index(request):
@@ -36,6 +37,9 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin,
     fields = ['first_name', 'last_name', 'username']
     success_url = reverse_lazy('users')
     success_message = _('Пользователь успешно изменен')
+    login_url = reverse_lazy('login')
+    redirect_field_name = None
+    login_required_msg = _('Вы не авторизованы! Пожалуйста, выполните вход.')
 
     def test_func(self):
         # Проверяем, совпадает ли id пользователя с id профиля
@@ -43,9 +47,14 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin,
 
     def handle_no_permission(self):
         # Сообщение при отказе в доступе
-        messages.error(self.request,
-                       _('У вас нет прав для изменения другого пользователя'))
-        return redirect('users')
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, self.login_required_msg)
+            return redirect(self.login_url)
+        else:
+            no_perm_ms = _('У вас нет прав для изменения другого пользователя')
+            messages.error(self.request, no_perm_ms)
+            # Redirect to index for authenticated users without permission
+            return redirect('index')
 
 
 class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin,
@@ -55,6 +64,8 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin,
     template_name = 'task_manager/user_confirm_delete.html'
     success_url = reverse_lazy('users')
     success_message = _('Пользователь успешно удален')
+    login_url = reverse_lazy('login')
+    redirect_field_name = None
 
     def test_func(self):
         # Проверяем, совпадает ли id пользователя с id профиля
@@ -62,9 +73,14 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin,
 
     def handle_no_permission(self):
         # Сообщение при отказе в доступе
-        messages.error(self.request,
-                       _('У вас нет прав для удаления другого пользователя'))
-        return redirect('users')
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, self.login_required_msg)
+            return redirect(self.login_url)
+        else:
+            no_perm_msg = _('У вас нет прав для удаления другого пользователя')
+            messages.error(self.request, no_perm_msg)
+            # Redirect to index for authenticated users without permission
+            return redirect('index')
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -118,3 +134,51 @@ class UserLogoutView(LoginView):
             logout(request)
             messages.info(request, _('Вы вышли из системы'))
         return redirect('index')
+
+
+class StatusListView(ListView):
+    """Display list of all statuses."""
+    model = Status
+    template_name = 'task_manager/statuses_list.html'
+    context_object_name = 'statuses'
+
+    def get_queryset(self):
+        return Status.objects.all()
+
+
+class StatusCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    """Handle status creation."""
+    model = Status
+    template_name = 'task_manager/status_form.html'
+    fields = ['name']
+    success_url = reverse_lazy('statuses')
+    success_message = _('Статус успешно создан')
+
+
+class StatusUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    """Handle status update."""
+    model = Status
+    template_name = 'task_manager/status_form.html'
+    fields = ['name']
+    success_url = reverse_lazy('statuses')
+    success_message = _('Статус успешно изменен')
+    login_url = reverse_lazy('login')
+    redirect_field_name = None
+
+    def handle_no_permission(self):
+        messages.error(self.request, self.login_required_msg)
+        return redirect(self.login_url)
+
+
+class StatusDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    """Handle status deletion."""
+    model = Status
+    template_name = 'task_manager/status_confirm_delete.html'
+    success_url = reverse_lazy('statuses')
+    success_message = _('Статус успешно удален')
+    login_url = reverse_lazy('login')
+    redirect_field_name = None
+
+    def handle_no_permission(self):
+        messages.error(self.request, self.login_required_msg)
+        return redirect(self.login_url)

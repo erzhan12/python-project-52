@@ -1,0 +1,26 @@
+[
+  {
+    "model": "task_manager.status",
+    "pk": 1,
+    "fields": {
+      "name": "new",
+      "created_at": "2024-02-25T10:00:00Z"
+    }
+  },
+  {
+    "model": "task_manager.status",
+    "pk": 2,
+    "fields": {
+      "name": "in progress",
+      "created_at": "2024-02-25T10:01:00Z"
+    }
+  },
+  {
+    "model": "task_manager.status",
+    "pk": 3,
+    "fields": {
+      "name": "done",
+      "created_at": "2024-02-25T10:02:00Z"
+    }
+  }
+] 
