@@ -66,6 +66,7 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin,
     success_message = _('Пользователь успешно удален')
     login_url = reverse_lazy('login')
     redirect_field_name = None
+    login_required_msg = _('Вы не авторизованы! Пожалуйста, выполните вход.')
 
     def test_func(self):
         # Проверяем, совпадает ли id пользователя с id профиля
@@ -87,7 +88,7 @@ class CustomUserCreationForm(UserCreationForm):
     """Custom form for user registration with additional fields."""
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email']
+        fields = ['first_name', 'last_name', 'username']
 
 
 class UserCreateView(SuccessMessageMixin, CreateView):
@@ -108,8 +109,8 @@ class UserCreateView(SuccessMessageMixin, CreateView):
             raise
 
 
-class UserLoginView(LoginView):
-    """Handle user authentication."""
+class UserLoginView(SuccessMessageMixin, LoginView):
+    """Handle user login."""
     template_name = 'task_manager/login.html'
     next_page = reverse_lazy('index')
     redirect_authenticated_user = True
@@ -117,6 +118,7 @@ class UserLoginView(LoginView):
         'title': _('Вход'),
         'button_text': _('Войти')
     }
+    success_message = _('Вы залогинены')
 
     def get(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
@@ -132,18 +134,24 @@ class UserLogoutView(LoginView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             logout(request)
-            messages.info(request, _('Вы вышли из системы'))
+            messages.info(request, _('Вы разлогинены'))
         return redirect('index')
 
 
-class StatusListView(ListView):
+class StatusListView(LoginRequiredMixin, ListView):
     """Display list of all statuses."""
     model = Status
     template_name = 'task_manager/statuses_list.html'
     context_object_name = 'statuses'
+    login_url = reverse_lazy('login')
+    redirect_field_name = None
 
     def get_queryset(self):
         return Status.objects.all()
+    
+    def handle_no_permission(self):
+        messages.error(self.request, _('Вы не авторизованы! Пожалуйста, выполните вход.'))
+        return redirect(self.login_url)
 
 
 class StatusCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -153,6 +161,18 @@ class StatusCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     fields = ['name']
     success_url = reverse_lazy('statuses')
     success_message = _('Статус успешно создан')
+    login_url = reverse_lazy('login')
+    redirect_field_name = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = _('Создать статус')
+        context['button_text'] = _('Создать')
+        return context
+
+    def handle_no_permission(self):
+        messages.error(self.request, _('Вы не авторизованы! Пожалуйста, выполните вход.'))
+        return redirect(self.login_url)
 
 
 class StatusUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -165,8 +185,14 @@ class StatusUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url = reverse_lazy('login')
     redirect_field_name = None
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = _('Изменение статуса')
+        context['button_text'] = _('Изменить')
+        return context
+
     def handle_no_permission(self):
-        messages.error(self.request, self.login_required_msg)
+        messages.error(self.request, _('Вы не авторизованы! Пожалуйста, выполните вход.'))
         return redirect(self.login_url)
 
 
