@@ -8,3 +8,6 @@ db.sqlite3
 __pycache__/
 *.py[cod]
 *$py.class
+/staticfiles/
+/migrations/
+/task_manager/migrations/

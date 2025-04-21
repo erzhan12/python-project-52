@@ -1,0 +1,22 @@
+{% extends 'task_manager/base.html' %}
+{% load i18n django_bootstrap5 %}
+
+{% block content %}
+{% if object %}
+    <h1 class="my-4">{% translate "Изменение задачи" %}</h1>
+{% else %}
+    <h1 class="my-4">{% translate "Создание задачи" %}</h1>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <div class="form-group">
+        {% if object %}
+            <input type="submit" class="btn btn-primary" value="{% translate 'Изменить' %}">
+        {% else %}
+            <input type="submit" class="btn btn-primary" value="{% translate 'Создать' %}">
+        {% endif %}
+    </div>
+</form>
+{% endblock %}
