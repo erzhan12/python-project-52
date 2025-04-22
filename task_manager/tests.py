@@ -417,3 +417,96 @@ class TaskCRUDTestCase(TestCase):
         self.assertEqual(task.labels.count(), 2)
         self.assertTrue(task.labels.filter(id=self.label1.id).exists())
         self.assertTrue(task.labels.filter(id=self.label2.id).exists())
+
+
+class LabelCRUDTestCase(TestCase):
+    fixtures = [
+        'task_manager/fixtures/users.json',
+        'task_manager/fixtures/statuses.json',
+        'task_manager/fixtures/tasks.json',
+        'task_manager/fixtures/labels.json'
+    ]
+
+    def setUp(self):
+        self.client = Client()
+        # Create test users
+        self.user1 = User.objects.get(username='testuser1')
+        self.user1.set_password('testpass123')
+        self.user1.save()
+        # Read test labels from fixture
+        self.label1 = Label.objects.get(name='label1')
+        self.label2 = Label.objects.get(name='label2')
+        # Get existing status from fixture
+        self.status1 = Status.objects.get(name='new')
+        # Create test tasks
+        self.task1 = Task.objects.get(name='task1')
+        self.task2 = Task.objects.get(name='task2')
+        # Login as user1
+        self.client.login(username='testuser1', password='testpass123')
+
+    def test_label_list(self):
+        """Read label list"""
+        response = self.client.get(reverse('labels'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'label1')
+        self.assertContains(response, 'label2')
+
+    def test_label_create(self):
+        """Test new label creation."""
+        response = self.client.post(
+            reverse('label_create'),
+            data={'name': 'new_label'},
+            follow=True
+        )
+        self.assertRedirects(response, reverse('labels'))
+        self.assertEqual(Label.objects.count(), 3)
+        self.assertTrue(Label.objects.filter(name='new_label').exists())
+
+    def test_label_update(self):
+        """Test label update."""
+        response = self.client.post(
+            reverse('label_update', args=[self.label1.id]),
+            data={'name': 'updated_label'},
+            follow=True
+        )
+        self.assertRedirects(response, reverse('labels'))
+        self.label1.refresh_from_db()
+        self.assertEqual(self.label1.name, 'updated_label')
+
+    def test_label_delete_unauthenticated(self):
+        """Тест попытки удаления label неавторизованным пользователем."""
+        self.client.logout()
+        response = self.client.post(
+            reverse('label_delete', args=[self.label2.id]),
+            follow=True
+        )
+        self.assertRedirects(response, reverse('login'))
+        self.assertTrue(Task.objects.filter(id=self.label2.id).exists())
+        messages = list(response.context['messages'])
+        self.assertEqual(str(messages[0]), 'Вы не авторизованы! Пожалуйста, выполните вход.')
+
+    def test_label_delete_authenticated(self):
+        """Тест удаления label."""
+        response = self.client.post(
+            reverse('label_delete', args=[self.label2.id]),
+            follow=True
+        )
+        self.assertRedirects(response, reverse('labels'))
+        self.assertEqual(Label.objects.count(), 1)
+        self.assertFalse(Label.objects.filter(id=self.label2.id).exists())
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]), 'Метка успешно удалена')
+
+    def test_label_delete_with_tasks(self):
+        """Test that label cannot be deleted if it's used in tasks."""
+        # Associate label1 with task1
+        self.task1.labels.add(self.label1)
+        
+        response = self.client.post(
+            reverse('label_delete', args=[self.label1.id]),
+            follow=True
+        )
+        self.assertRedirects(response, reverse('labels'))
+        self.assertTrue(Label.objects.filter(id=self.label1.id).exists())
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(str(messages[0]), 'Невозможно удалить метку, потому что она используется')

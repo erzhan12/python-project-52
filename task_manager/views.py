@@ -349,3 +349,87 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
     def handle_no_permission(self):
         messages.error(self.request, self.login_required_msg)
         return redirect(self.login_url)
+
+
+class LabelListView(LoginRequiredMixin, ListView):
+    model = Label
+    template_name = 'task_manager/labels_list.html'
+    context_object_name = 'labels'
+    login_url = reverse_lazy('login')
+    redirect_field_name = None
+    login_required_msg = _('Вы не авторизованы! Пожалуйста, выполните вход.')
+
+    def get_queryset(self):
+        return Label.objects.all()
+
+    def handle_no_permission(self):
+        messages.error(self.request, self.login_required_msg)
+        return redirect(self.login_url)
+
+
+class LabelCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    """Handle label creation."""
+    model = Label
+    template_name = 'task_manager/label_form.html'
+    fields = ['name']
+    success_url = reverse_lazy('labels')
+    success_message = _('Метка успешно создана')
+    login_url = reverse_lazy('login')
+    redirect_field_name = None
+    login_required_msg = _('Вы не авторизованы! Пожалуйста, выполните вход.')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = _('Создать метку')
+        context['button_text'] = _('Создать')
+        return context
+
+    def handle_no_permission(self):
+        messages.error(self.request, self.login_required_msg)
+        return redirect(self.login_url)
+
+
+class LabelUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    """Handle label update."""
+    model = Label
+    template_name = 'task_manager/label_form.html'
+    fields = ['name']
+    success_url = reverse_lazy('labels')
+    success_message = _('Метка успешно изменена')
+    login_url = reverse_lazy('login')
+    redirect_field_name = None
+    login_required_msg = _('Вы не авторизованы! Пожалуйста, выполните вход.')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = _('Изменение метки')
+        context['button_text'] = _('Изменить')
+        return context
+
+    def handle_no_permission(self):
+        messages.error(self.request, self.login_required_msg)
+        return redirect(self.login_url)
+
+
+class LabelDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+    """Handle label deletion."""
+    model = Label
+    template_name = 'task_manager/label_confirm_delete.html'
+    success_url = reverse_lazy('labels')
+    success_message = _('Метка успешно удалена')
+    login_url = reverse_lazy('login')
+    redirect_field_name = None
+    login_required_msg = _('Вы не авторизованы! Пожалуйста, выполните вход.')
+
+    def test_func(self):
+        # Check if there are any tasks using this label
+        tasks = Task.objects.filter(labels=self.get_object())
+        return not tasks.exists()
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            messages.error(self.request, self.login_required_msg)
+            return redirect(self.login_url)
+        else:
+            messages.error(self.request, _('Невозможно удалить метку, потому что она используется'))
+            return redirect(reverse_lazy('labels'))
