@@ -16,6 +16,7 @@ from .forms import TaskFilterForm
 from django.db.models import ProtectedError
 
 
+
 def index(request):
     """Render the index page."""
     return render(request, "task_manager/index.html")
