@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 from .models import Status, Label
 
 
@@ -7,27 +8,27 @@ class TaskFilterForm(forms.Form):
     status = forms.ModelChoiceField(
         queryset=Status.objects.all(),
         required=False,
-        label='Статус',
+        label=_('Статус'),
         empty_label='---------'
     )
 
     executor = forms.ModelChoiceField(
         queryset=User.objects.all(),
         required=False,
-        label='Исполнитель',
+        label=_('Исполнитель'),
         empty_label='---------'
     )
 
     label = forms.ModelChoiceField(
         queryset=Label.objects.all(),
         required=False,
-        label='Метка',
+        label=_('Метка'),
         empty_label='---------'
     )
 
     self_tasks = forms.BooleanField(
         required=False,
-        label='Только свои задачи',
+        label=_('Только свои задачи'),
         initial=False
     )
 
@@ -51,7 +52,7 @@ class TaskFilterForm(forms.Form):
             if not Status.objects.filter(id=status.id).exists():
                 self.add_error(
                     'status',
-                    'Выбранный статус не существует'
+                    _('Выбранный статус не существует')
                 )
 
         # Validate executor if provided
@@ -60,7 +61,7 @@ class TaskFilterForm(forms.Form):
             if not User.objects.filter(id=executor.id).exists():
                 self.add_error(
                     'executor',
-                    'Выбранный исполнитель не существует'
+                    _('Выбранный исполнитель не существует')
                 )
 
         # Validate label if provided
