@@ -326,7 +326,10 @@ class TaskCRUDTestCase(TestCase):
         """Тест создания новой задачи."""
         response = self.client.post(
             reverse('task_create'),
-            data={'name': 'new_task', 'status': self.status1.id, 'created_by': self.user1.id},
+            data={'name': 'new_task',
+                  'status': self.status1.id,
+                  'created_by': self.user1.id
+                  },
             follow=True
         )
         self.assertRedirects(response, reverse('tasks'))
@@ -358,7 +361,7 @@ class TaskCRUDTestCase(TestCase):
             status=self.status1,
             created_by=self.user1
         )
-        
+
         response = self.client.post(
             reverse('task_delete', args=[task.id]),
             follow=True
@@ -378,7 +381,10 @@ class TaskCRUDTestCase(TestCase):
         self.assertRedirects(response, reverse('tasks'))
         self.assertTrue(Task.objects.filter(id=self.task2.id).exists())
         messages = list(response.context['messages'])
-        self.assertEqual(str(messages[0]), 'Задачу может удалить только её автор')
+        self.assertEqual(
+            str(messages[0]),
+            'Задачу может удалить только её автор'
+        )
 
     def test_task_delete_unauthenticated(self):
         """Тест попытки удаления задачи неавторизованным пользователем."""
@@ -390,12 +396,17 @@ class TaskCRUDTestCase(TestCase):
         self.assertRedirects(response, reverse('login'))
         self.assertTrue(Task.objects.filter(id=self.task1.id).exists())
         messages = list(response.context['messages'])
-        self.assertEqual(str(messages[0]), 'Вы не авторизованы! Пожалуйста, выполните вход.')
+        self.assertEqual(
+            str(messages[0]),
+            'Вы не авторизованы! Пожалуйста, выполните вход.'
+        )
 
     def test_task_filter_by_label(self):
         """Тест фильтрации задач по метке."""
         self.task1.labels.add(self.label1)
-        response = self.client.get(reverse('tasks') + '?label=' + str(self.label1.id))
+        response = self.client.get(
+            reverse('tasks') + '?label=' + str(self.label1.id)
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.task1.name)
         self.assertNotContains(response, self.task2.name)
@@ -483,7 +494,10 @@ class LabelCRUDTestCase(TestCase):
         self.assertRedirects(response, reverse('login'))
         self.assertTrue(Task.objects.filter(id=self.label2.id).exists())
         messages = list(response.context['messages'])
-        self.assertEqual(str(messages[0]), 'Вы не авторизованы! Пожалуйста, выполните вход.')
+        self.assertEqual(
+            str(messages[0]),
+            'Вы не авторизованы! Пожалуйста, выполните вход.'
+        )
 
     def test_label_delete_authenticated(self):
         """Тест удаления label."""
@@ -501,7 +515,7 @@ class LabelCRUDTestCase(TestCase):
         """Test that label cannot be deleted if it's used in tasks."""
         # Associate label1 with task1
         self.task1.labels.add(self.label1)
-        
+
         response = self.client.post(
             reverse('label_delete', args=[self.label1.id]),
             follow=True
@@ -509,4 +523,7 @@ class LabelCRUDTestCase(TestCase):
         self.assertRedirects(response, reverse('labels'))
         self.assertTrue(Label.objects.filter(id=self.label1.id).exists())
         messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[0]), 'Невозможно удалить метку, потому что она используется')
+        self.assertEqual(
+            str(messages[0]),
+            'Невозможно удалить метку, потому что она используется'
+        )

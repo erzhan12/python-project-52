@@ -1,6 +1,7 @@
 # from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, UpdateView, DeleteView, CreateView, DetailView
+from django.views.generic import ListView, UpdateView
+from django.views.generic import DeleteView, CreateView, DetailView
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
@@ -13,8 +14,6 @@ from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Status, Task, Label
 from .forms import TaskFilterForm
-from django.db.models import ProtectedError
-
 
 
 def index(request):
@@ -32,8 +31,9 @@ class UserListView(ListView):
         return User.objects.all()
 
 
-class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin,
-                     SuccessMessageMixin, UpdateView):
+class UserUpdateView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView
+):
     """Update user information."""
     model = User
     template_name = 'task_manager/user_form.html'
@@ -42,7 +42,9 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin,
     success_message = _('Пользователь успешно изменен')
     login_url = reverse_lazy('login')
     redirect_field_name = None
-    login_required_msg = _('Вы не авторизованы! Пожалуйста, выполните вход.')
+    login_required_msg = _(
+        'Вы не авторизованы! Пожалуйста, выполните вход.'
+    )
 
     def test_func(self):
         # Проверяем, совпадает ли id пользователя с id профиля
@@ -60,8 +62,9 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin,
             return redirect(reverse_lazy('users'))
 
 
-class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin,
-                     SuccessMessageMixin, DeleteView):
+class UserDeleteView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
+):
     """Delete user account."""
     model = User
     template_name = 'task_manager/user_confirm_delete.html'
@@ -69,7 +72,12 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin,
     success_message = _('Пользователь успешно удален')
     login_url = reverse_lazy('login')
     redirect_field_name = None
-    login_required_msg = _('Вы не авторизованы! Пожалуйста, выполните вход.')
+    login_required_msg = _(
+        'Вы не авторизованы! Пожалуйста, выполните вход.'
+    )
+    user_used_msg = _(
+        'Невозможно удалить пользователя, потому что он используется'
+    )
 
     def test_func(self):
         # Проверяем, совпадает ли id пользователя с id профиля
@@ -91,7 +99,7 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin,
         if tasks.exists():
             messages.error(
                 request,
-                _('Невозможно удалить пользователя, потому что он используется')
+                self.user_used_msg
             )
             return redirect(reverse_lazy('users'))
         return super().post(request, *args, **kwargs)
@@ -312,7 +320,9 @@ class TaskUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return redirect(self.login_url)
 
 
-class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+class TaskDeleteView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
+):
     """Handle Task Deletion"""
     model = Task
     template_name = 'task_manager/task_confirm_delete.html'
@@ -320,7 +330,9 @@ class TaskDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixi
     success_message = _('Задача успешно удалена')
     login_url = reverse_lazy('login')
     redirect_field_name = None
-    login_required_msg = _('Вы не авторизованы! Пожалуйста, выполните вход.')
+    login_required_msg = _(
+        'Вы не авторизованы! Пожалуйста, выполните вход.'
+    )
 
     def test_func(self):
         # Проверяем, является ли текущий пользователь автором задачи
@@ -412,7 +424,9 @@ class LabelUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return redirect(self.login_url)
 
 
-class LabelDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+class LabelDeleteView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
+):
     """Handle label deletion."""
     model = Label
     template_name = 'task_manager/label_confirm_delete.html'
@@ -420,7 +434,10 @@ class LabelDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMix
     success_message = _('Метка успешно удалена')
     login_url = reverse_lazy('login')
     redirect_field_name = None
-    login_required_msg = _('Вы не авторизованы! Пожалуйста, выполните вход.')
+    login_required_msg = _(
+        'Вы не авторизованы! Пожалуйста, выполните вход.'
+    )
+    label_used_msg = _('Невозможно удалить метку, потому что она используется')
 
     def test_func(self):
         # Check if there are any tasks using this label
@@ -432,5 +449,5 @@ class LabelDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMix
             messages.error(self.request, self.login_required_msg)
             return redirect(self.login_url)
         else:
-            messages.error(self.request, _('Невозможно удалить метку, потому что она используется'))
+            messages.error(self.request, self.label_used_msg)
             return redirect(reverse_lazy('labels'))

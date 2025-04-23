@@ -10,21 +10,21 @@ class TaskFilterForm(forms.Form):
         label='Статус',
         empty_label='---------'
     )
-    
+
     executor = forms.ModelChoiceField(
         queryset=User.objects.all(),
         required=False,
         label='Исполнитель',
         empty_label='---------'
     )
-    
+
     label = forms.ModelChoiceField(
         queryset=Label.objects.all(),
         required=False,
         label='Метка',
         empty_label='---------'
     )
-    
+
     self_tasks = forms.BooleanField(
         required=False,
         label='Только свои задачи',
@@ -40,27 +40,36 @@ class TaskFilterForm(forms.Form):
             cleaned_data.get('label'),
             cleaned_data.get('self_tasks')
         ])
-        
+
         if not has_filters:
             # If no filters are applied, don't validate the fields
             return cleaned_data
-            
+
         # Validate status if provided
         if cleaned_data.get('status'):
             status = cleaned_data['status']
             if not Status.objects.filter(id=status.id).exists():
-                self.add_error('status', 'Выбранный статус не существует')
-                
+                self.add_error(
+                    'status',
+                    'Выбранный статус не существует'
+                )
+
         # Validate executor if provided
         if cleaned_data.get('executor'):
             executor = cleaned_data['executor']
             if not User.objects.filter(id=executor.id).exists():
-                self.add_error('executor', 'Выбранный исполнитель не существует')
-                
+                self.add_error(
+                    'executor',
+                    'Выбранный исполнитель не существует'
+                )
+
         # Validate label if provided
         if cleaned_data.get('label'):
             label = cleaned_data['label']
             if not Label.objects.filter(id=label.id).exists():
-                self.add_error('label', 'Выбранная метка не существует')
-                
+                self.add_error(
+                    'label',
+                    'Выбранная метка не существует'
+                )
+
         return cleaned_data
