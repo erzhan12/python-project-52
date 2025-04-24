@@ -6,6 +6,7 @@ set -o errexit
 #pip install -r requirements.txt
 curl -LsSf https://astral.sh/uv/install.sh | sh
 source $HOME/.local/bin/env
+
 make install
 # Convert static asset files
 make collectstatic
