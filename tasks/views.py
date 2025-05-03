@@ -336,7 +336,7 @@ class TaskDeleteView(
             messages.error(self.request, self.login_required_msg)
             return redirect(self.login_url)
         else:
-            no_perm_msg = _('У вас нет прав для удаления другой задачи')
+            no_perm_msg = _('Задачу может удалить только ее автор')
             messages.error(self.request, no_perm_msg)
             return redirect(reverse_lazy('tasks'))
 
@@ -416,7 +416,7 @@ class LabelUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
 
 class LabelDeleteView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
+    LoginRequiredMixin, SuccessMessageMixin, DeleteView
 ):
     """Handle label deletion."""
     model = Label
@@ -430,14 +430,14 @@ class LabelDeleteView(
     )
     label_used_msg = _('Невозможно удалить метку, потому что она используется')
 
-    def test_func(self):
-        # Check if there are any tasks using this label
-        return not self.get_object().tasks.exists()
+    def post(self, request, *args, **kwargs):
+        label = self.get_object()
+        # Check if any tasks are using this label
+        if Task.objects.filter(labels=label).exists():
+            messages.error(request, self.label_used_msg)
+            return redirect(reverse_lazy('labels'))
+        return super().post(request, *args, **kwargs)
 
     def handle_no_permission(self):
-        if not self.request.user.is_authenticated:
-            messages.error(self.request, self.login_required_msg)
-            return redirect(self.login_url)
-        else:
-            messages.error(self.request, self.label_used_msg)
-            return redirect(reverse_lazy('labels'))
+        messages.error(self.request, self.login_required_msg)
+        return redirect(self.login_url)

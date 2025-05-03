@@ -385,7 +385,7 @@ class TaskCRUDTestCase(TestCase):
         messages = list(response.context['messages'])
         self.assertEqual(
             str(messages[0]),
-            'Задачу может удалить только её автор'
+            'Задачу может удалить только ее автор'
         )
 
     def test_task_delete_unauthenticated(self):

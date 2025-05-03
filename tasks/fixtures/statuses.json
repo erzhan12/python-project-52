@@ -1,6 +1,6 @@
 [
   {
-    "model": "task_manager.status",
+    "model": "tasks.status",
     "pk": 1,
     "fields": {
       "name": "new",
@@ -8,7 +8,7 @@
     }
   },
   {
-    "model": "task_manager.status",
+    "model": "tasks.status",
     "pk": 2,
     "fields": {
       "name": "in progress",
@@ -16,7 +16,7 @@
     }
   },
   {
-    "model": "task_manager.status",
+    "model": "tasks.status",
     "pk": 3,
     "fields": {
       "name": "done",
