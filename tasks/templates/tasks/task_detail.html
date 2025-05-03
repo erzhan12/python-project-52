@@ -1,0 +1,53 @@
+{% extends 'tasks/base.html' %}
+{% load i18n %}
+
+{% block content %}
+<h1 class="my-4">{% translate "Просмотр задачи" %}</h1>
+
+<div class="card">
+    <div class="card-header bg-secondary text-white">
+        <h2>{{ task.name }}</h2>
+    </div>
+    <div class="card-body bg-light">
+        <p>{{ task.description }}</p>
+        <hr>
+        <div class="container">
+            <div class="row p-1">
+                <div class="col">{% translate "Автор" %}</div>
+                <div class="col">{{ task.created_by }}</div>
+            </div>
+            <div class="row p-1">
+                <div class="col">{% translate "Исполнитель" %}</div>
+                <div class="col">{{ task.executor|default:"Не назначен" }}</div>
+            </div>
+            <div class="row p-1">
+                <div class="col">{% translate "Статус" %}</div>
+                <div class="col">{{ task.status }}</div>
+            </div>
+            <div class="row p-1">
+                <div class="col">{% translate "Дата создания" %}</div>
+                <div class="col">{{ task.created_at|date:"d.m.Y H:i" }}</div>
+            </div>
+            <div class="row p-1">
+                <div class="col">{% translate "Метки" %}</div>
+                <div >
+                    <ul>
+                        {% for label in task.labels.all %}
+                            <li>{{ label.name }}</li>
+                        {% empty %}
+                            <li>{% translate "Нет меток" %}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col">
+                    <a href="{% url 'task_update' task.id %}">{% translate "Изменить" %}</a>
+                    <br>
+                    <a href="{% url 'task_delete' task.id %}">{% translate "Удалить" %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
