@@ -30,14 +30,14 @@ load_dotenv()
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = '3453453rfdcxcasdasd'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = True
 
 ALLOWED_HOSTS = ["webserver", "127.0.0.1"]
 
-ROLLBAR_ACCESS_TOKEN = os.getenv('ROLLBAR_ACCESS_TOKEN')
+# ROLLBAR_ACCESS_TOKEN = os.getenv('ROLLBAR_ACCESS_TOKEN')
 
 
 # Application definition
@@ -73,8 +73,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'templates',
-            'templates',
+            # BASE_DIR / 'templates',
+            # 'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -143,7 +143,7 @@ USE_L10N = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # This production code might break development mode, so we check whether we're in DEBUG mode
@@ -159,7 +159,7 @@ if not DEBUG:
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOCALE_PATHS = [
-    BASE_DIR / 'task_manager' / 'locale',
+    os.path.join(BASE_DIR, "locale"),
 ]
 
 LANGUAGES = (
@@ -193,9 +193,9 @@ def get_languages_callback(request):
 
 MIDDLEWARE_CLASSES = MIDDLEWARE  # Keep existing middleware
 
-ROLLBAR = {
-    'access_token': ROLLBAR_ACCESS_TOKEN,
-    'environment': 'development' if DEBUG else 'production',
-    'code_version': '1.0',
-    'root': BASE_DIR,
-}
+# ROLLBAR = {
+#     'access_token': ROLLBAR_ACCESS_TOKEN,
+#     'environment': 'development' if DEBUG else 'production',
+#     'code_version': '1.0',
+#     'root': BASE_DIR,
+# }
