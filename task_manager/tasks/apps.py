@@ -2,6 +2,5 @@ from django.apps import AppConfig
 
 
 class TasksConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
     name = 'task_manager.tasks'
-    # verbose_name = 'Tasks'
+    # default_auto_field = 'django.db.models.BigAutoField'
