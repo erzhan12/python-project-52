@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_bootstrap5',
+    'task_manager',
     'task_manager.tasks.apps.TasksConfig',
 ]
 
@@ -94,7 +95,8 @@ WSGI_APPLICATION = 'task_manager.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
+    "default": dj_database_url.config(default=os.getenv("DATABASE", "sqlite:///db.sqlite"))
+    # 'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
