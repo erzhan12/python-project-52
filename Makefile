@@ -1,16 +1,16 @@
 dev:
-	uv run python manage.py runserver
+	uv run python3 manage.py runserver
 
 translate:
 	uv run django-admin makemessages --locale ru
 	uv run python manage.py compilemessages
 
 migrate:
-	uv run python manage.py makemigrations
-	uv run python manage.py migrate
+	uv run python3 manage.py makemigrations
+	uv run python3 manage.py migrate
 
 tests:
-	uv run python manage.py test
+	uv run python3 manage.py test
 
 install:
 	uv sync
