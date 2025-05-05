@@ -23,6 +23,6 @@ urlpatterns = [
 ]
 
 urlpatterns += i18n_patterns(
-    path('', include('tasks.urls')),
+    path('', include('task_manager.tasks.urls')),
     path('admin/', admin.site.urls),
 )
