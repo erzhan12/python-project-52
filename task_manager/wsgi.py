@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/5.1/howto/deployment/wsgi/
 """
 
 import os
+from task_manager.settings import BASE_DIR
 
 from django.core.wsgi import get_wsgi_application
 from whitenoise import WhiteNoise
@@ -15,4 +16,5 @@ from whitenoise import WhiteNoise
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'task_manager.settings')
 
 application = get_wsgi_application()
-application = WhiteNoise(application, root="staticfiles")
+application = WhiteNoise(application, root=BASE_DIR / 'task_manager' / 'staticfiles')
+

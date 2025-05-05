@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_bootstrap5',
-    'tasks',
+    'task_manager.tasks',
 ]
 
 MIDDLEWARE = [
@@ -157,7 +157,7 @@ if not DEBUG:
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOCALE_PATHS = [
-    BASE_DIR / 'locale',
+    BASE_DIR / 'task_manager' / 'locale',
 ]
 
 LANGUAGES = (
