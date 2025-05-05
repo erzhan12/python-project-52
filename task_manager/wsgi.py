@@ -11,6 +11,9 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+print(100 * "=")
+print(os.getcwd())
+print(100 * "=")
 # os.environ.setdefault("DJANGO_SETTINGS_MODULE", "task_manager.settings")
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 
