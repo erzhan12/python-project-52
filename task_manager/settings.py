@@ -48,12 +48,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_bootstrap5",
-    "task_manager",
-    # "task_manager.users.apps.UsersConfig",
-    # "task_manager.statuses.apps.StatusesConfig",
     "task_manager.tasks.apps.TasksConfig",
-    # "task_manager.labels.apps.LabelsConfig",
 ]
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -139,7 +136,7 @@ USE_TZ = True
 LANGUAGES = [("en", "English"), ("ru", "Русский")]
 
 LOCALE_PATHS = [
-    os.path.join(BASE_DIR, "locale"),
+    os.path.join(BASE_DIR, "task_manager", "locale"),
 ]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
