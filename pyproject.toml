@@ -1,5 +1,5 @@
 [project]
-name = "task-manager"
+name = "hexlet-code"
 version = "0.1.0"
 description = "Task Manager"
 readme = "README.md"
@@ -33,7 +33,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "task-manager"
+name = "hexlet-code"
 version = "0.1.0"
 description = "Task Manager"
 authors = ["Yerzhan <erzhan.sarsenov@gmail.com>"]
