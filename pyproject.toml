@@ -23,9 +23,11 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "flake8>=7.1.1",
+    "pytest-django>=4.8.0",
 ]
 test = [
     "pytest",
+    "pytest-django>=4.8.0",
 ]
 
 [build-system]
@@ -60,9 +62,11 @@ uvicorn = "^0.34.0"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^7.1.1"
+pytest-django = "^4.8.0"
 
 [tool.poetry.group.testing]
 optional = true
 
 [tool.poetry.group.testing.dependencies]
 pytest = "*"
+pytest-django = "^4.8.0"
