@@ -18,19 +18,26 @@ User = get_user_model()
 
 class UserCRUDTestCase(TestCase):
     """Test user CRUD operations."""
-    fixtures = ['task_manager/tasks/fixtures/users.json']
+    # fixtures = ['task_manager/tasks/fixtures/users.json']
 
     def setUp(self):
         self.client = Client()
-        # Создаём пользователей напрямую вместо использования фикстур
-        self.user1 = User.objects.get(username='testuser1')
-        self.user2 = User.objects.get(username='testuser2')
-
+        # Используем пользователей из фикстур
+        # self.user1 = User.objects.get(username='testuser1')
+        # self.user2 = User.objects.get(username='testuser2')
+        self.user1 = User.objects.create_user(
+            username='testuser1',
+            password='testpass123'
+        )
+        self.user2 = User.objects.create_user(
+            username='testuser2',
+            password='testpass123'
+        )
         # Устанавливаем пароль, который можно использовать для входа
-        self.user1.set_password('testpass123')
-        self.user1.save()
-        self.user2.set_password('testpass123')
-        self.user2.save()
+        # self.user1.set_password('testpass123')
+        # self.user1.save()
+        # self.user2.set_password('testpass123')
+        # self.user2.save()
 
     def test_users_list(self):
         """Тест чтения списка пользователей."""
