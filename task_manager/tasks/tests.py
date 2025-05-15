@@ -6,15 +6,11 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.messages import get_messages
-from django.utils.translation import gettext_lazy as _
 from task_manager.tasks.models import Status, Task, Label
-from task_manager.tasks.forms import TaskFilterForm
-from task_manager.tasks.views import (
-    TaskListView, TaskCreateView, TaskUpdateView,
-    TaskDeleteView, TaskDetailView
-)
+
 
 User = get_user_model()
+
 
 class UserCRUDTestCase(TestCase):
     """Test user CRUD operations."""
@@ -199,7 +195,7 @@ class UserCRUDTestCase(TestCase):
 class StatusCRUDTestCase(TestCase):
     """Test status CRUD operations."""
     fixtures = ['task_manager/tasks/fixtures/users.json',
-               'task_manager/tasks/fixtures/statuses.json']
+                'task_manager/tasks/fixtures/statuses.json']
 
     def setUp(self):
         self.client = Client()
@@ -307,9 +303,9 @@ class StatusCRUDTestCase(TestCase):
 class TaskCRUDTestCase(TestCase):
     """Test task CRUD operations."""
     fixtures = ['task_manager/tasks/fixtures/users.json',
-               'task_manager/tasks/fixtures/statuses.json',
-               'task_manager/tasks/fixtures/tasks.json',
-               'task_manager/tasks/fixtures/labels.json']
+                'task_manager/tasks/fixtures/statuses.json',
+                'task_manager/tasks/fixtures/tasks.json',
+                'task_manager/tasks/fixtures/labels.json']
 
     def setUp(self):
         self.client = Client()
@@ -449,9 +445,9 @@ class TaskCRUDTestCase(TestCase):
 class LabelCRUDTestCase(TestCase):
     """Test label CRUD operations."""
     fixtures = ['task_manager/tasks/fixtures/users.json',
-               'task_manager/tasks/fixtures/statuses.json',
-               'task_manager/tasks/fixtures/labels.json',
-               'task_manager/tasks/fixtures/tasks.json']
+                'task_manager/tasks/fixtures/statuses.json',
+                'task_manager/tasks/fixtures/labels.json',
+                'task_manager/tasks/fixtures/tasks.json']
 
     def setUp(self):
         self.client = Client()

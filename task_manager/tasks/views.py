@@ -252,7 +252,9 @@ class TaskListView(LoginRequiredMixin, ListView):
             if form.cleaned_data['status']:
                 queryset = queryset.filter(status=form.cleaned_data['status'])
             if form.cleaned_data['executor']:
-                queryset = queryset.filter(executor=form.cleaned_data['executor'])
+                queryset = queryset.filter(
+                    executor=form.cleaned_data['executor']
+                )
             if form.cleaned_data['label']:
                 queryset = queryset.filter(labels=form.cleaned_data['label'])
             if form.cleaned_data['self_tasks']:
