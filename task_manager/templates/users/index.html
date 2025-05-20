@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Users" %}{% endblock %}
+{% block main_classes %}container py-5{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <h1 class="mb-4">{% trans "Users" %}</h1>
+
+    {% if users %}
+      <div class="table-responsive">
+        <table class="table table-dark table-striped table-borderless align-middle mb-0">
+          <thead class="align-middle">
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">{% trans "Username" %}</th>
+              <th scope="col">{% trans "Full name" %}</th>
+              <th scope="col">{% trans "Date created" %}</th>
+              <th scope="col" class="text-center"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+              <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.get_full_name }}</td>
+                <td>{{ user.date_joined|date:"d.m.Y H:i" }}</td>
+                <td class="text-center">
+                  <div class="d-inline-flex flex-wrap justify-content-center gap-2">
+                    <a href="{% url 'users:update' user.id %}" class="btn btn-sm btn-outline-light">
+                      {% trans "Edit" %}
+                    </a>
+                    <a href="{% url 'users:delete' user.id %}" class="btn btn-sm btn-outline-danger">
+                      {% trans "Delete" %}
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="text-white">
+        {% trans "No users found." %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

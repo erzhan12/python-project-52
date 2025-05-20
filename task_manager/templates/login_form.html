@@ -1,0 +1,14 @@
+{% extends "includes/base_form.html" %}
+{% load i18n %}
+
+{% block form_title %}{% trans "Log In" %}{% endblock %}
+{% block form_heading %}{% trans "Log In" %}{% endblock %}
+{% block form_button %}{% trans "Enter" %}{% endblock %}
+{% block bottom_text %}
+  <div class="text-center mt-4">
+    <small class="text-light text-opacity-50">
+      {% trans "Don’t have an account?" %}
+      <a href="{% url 'users:create' %}" class="text-decoration-none text-light">{% trans "Sign Up" context "button" %}</a>
+    </small>
+  </div>
+{% endblock %}

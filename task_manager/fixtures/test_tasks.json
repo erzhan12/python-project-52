@@ -1,0 +1,26 @@
+[
+    {
+      "model": "tasks.task",
+      "pk": 1,
+      "fields": {
+        "name": "Defend the Wall",
+        "description": "Coordinate the Night's Watch to defend Castle Black from wildlings.",
+        "status": 1,
+        "author": 2,
+        "executor": 1,
+        "created_at": "2025-01-01T00:00:00Z"
+      }
+    },
+    {
+      "model": "tasks.task",
+      "pk": 2,
+      "fields": {
+        "name": "Claim the Iron Throne",
+        "description": "Gather armies and political support to take the Iron Throne in King's Landing.",
+        "status": 1,
+        "author": 1,
+        "executor": 2,
+        "created_at": "2025-01-01T00:00:00Z"
+      }
+    }
+  ]

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<h1 class="my-4">
+    {% translate 'Tasks' %}
+</h1>
+
+<!-- Форма фильтрации -->
+<form method="get" class="filter-form mb-4">
+  <div class="form-group">
+      {% bootstrap_field filter.form.status %}
+  </div>
+  <div class="form-group">
+      {% bootstrap_field filter.form.task_label %}
+  </div>
+  <div class="form-group">
+      {% bootstrap_field filter.form.executor %}
+  </div>
+
+  <div class="form-group">
+    {% bootstrap_field filter.form.own_tasks %}
+</div>
+
+  <div>
+      <button type="submit" class="btn btn-primary">{% translate 'Show' %}</button>
+      <a href="{% url 'tasks:list' %}" class="btn btn-secondary">{% translate 'reset filtres' %}</a>
+  </div>
+</form>
+    <a class="btn btn-primary mb-3" href="{% url 'tasks:create' %}">{% translate 'Create task' %}</a>
+    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>{% translate 'ID' %}</th>
+            <th>{% translate 'Name' %}</th>
+            <th>{% translate 'Creation Date' %}</th>
+            <th>{% translate 'Executor' %}</th>
+            <th>{% translate 'Creator' %}</th>
+            <th>{% translate 'Status' %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for task in tasks_list %}
+          <tr>
+            <td>{{ task.id }}</td>
+            <td> <a href="{% url 'tasks:click' task.id %}">{{ task.name }}</a></td>
+            <td>{{ task.created_at }}</td>
+            <td>{{ task.executor }}</td>
+            <td>{{ task.creator }}</td>
+            <td>{{ task.status }}</td>
+            <td>
+              <a href="{% url 'tasks:update' task.id%}">{% translate 'Edit' %}</a>
+              <br>
+              <a href="{% url 'tasks:delete' task.id %}">{% translate 'Delete' %}</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+{% endblock %}
+      

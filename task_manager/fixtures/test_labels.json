@@ -1,0 +1,18 @@
+[
+    {
+      "model": "labels.label",
+      "pk": 1,
+      "fields": {
+        "name": "Bug",
+        "created_at": "2025-05-05T12:00:00Z"
+      }
+    },
+    {
+      "model": "labels.label",
+      "pk": 2,
+      "fields": {
+        "name": "Enhancement ",
+        "created_at": "2025-05-05T13:00:00Z"
+      }
+    }
+]

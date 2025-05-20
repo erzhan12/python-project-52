@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}
+  {% trans 'Task View' %}
+{% endblock %}
+
+{% block main_classes %}flex-grow-1 align-items-center justify-content-center py-5{% endblock %}
+
+{% block content %}
+<div class="container wrapper flex-grow-1">
+  <h1 class="my-4 text-white">{% trans "Task View" %}</h1>
+
+  <div class="card shadow border border-secondary rounded bg-dark text-white border-dark">
+    <div class="card-header bg-secondary text-white rounded-top">
+      <h2 class="h3 mb-2">{{ task.name }}</h2>
+    </div>
+    <div class="card-body bg-dark text-white rounded-bottom">
+      <p>{{ task.description }}</p>
+      <hr>
+      <div class="container">
+        <div class="row py-1">
+          <div class="col-sm-4 fw-semibold">{% trans "Author" %}</div>
+          <div class="col-sm-8">{{ task.author }}</div>
+        </div>
+        <div class="row py-1">
+          <div class="col-sm-4 fw-semibold">{% trans "Executor" %}</div>
+          <div class="col-sm-8">{{ task.executor }}</div>
+        </div>
+        <div class="row py-1">
+          <div class="col-sm-4 fw-semibold">{% trans "Status" %}</div>
+          <div class="col-sm-8">{{ task.status }}</div>
+        </div>
+        <div class="row py-1">
+          <div class="col-sm-4 fw-semibold">{% trans "Date created" %}</div>
+          <div class="col-sm-8">{{ task.created_at|date:"d.m.Y H:i" }}</div>
+        </div>
+
+        <div class="row py-3">
+          <div class="col">
+            <h6>{% trans "Labels" %}:</h6>
+            {% if task.labels.all %}
+              <ul class="mb-0">
+                {% for label in task.labels.all %}
+                  <li>{{ label }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="fst-italic">{% trans "No labels found." %}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <a href="{% url 'tasks:update' task.id %}" class="btn btn-outline-light btn-sm me-2">{% trans "Edit" %}</a>
+            <a href="{% url 'tasks:delete' task.id %}" class="btn btn-outline-danger btn-sm">{% trans "Delete" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+
+<h1 class="my-4">
+    {% translate 'Users' %}
+</h1>
+          
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>{% translate 'ID' %}</th>
+      <th>{% translate 'Username' %}</th>
+      <th>{% translate 'Full Name' %}</th>
+      <th>{% translate 'Creation Date' %}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in user_list %}
+    <tr>
+      <td>{{ user.id }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.get_full_name }}</td>
+      <td>{{ user.date_joined }}</td>
+      <td>
+        <a href="{% url 'users:update' user.id%}">{% translate 'Edit' %}</a>
+        <br>
+        <a href="{% url 'users:delete' user.id %}">{% translate 'Delete' %}</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

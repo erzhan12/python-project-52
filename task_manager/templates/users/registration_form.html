@@ -1,0 +1,19 @@
+{% extends "includes/base_form.html" %}
+{% load i18n %}
+
+{% block form_title %}{{ title }}{% endblock %}
+{% block form_heading %}{{ title }}{% endblock %}
+{% block form_button %}{{ button_name }}{% endblock %}
+
+{% block bottom_text %}
+  {% if request.resolver_match.url_name == 'user_create' %}
+    <div class="text-center mt-4">
+      <small class="text-light text-opacity-50">
+        {% trans "Already have an account?" %}
+        <a href="{% url 'login' %}" class="text-decoration-none text-light">
+          {% trans "Log In" context "button" %}
+        </a>
+      </small>
+    </div>
+  {% endif %}
+{% endblock %}

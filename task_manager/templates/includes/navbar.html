@@ -1,0 +1,44 @@
+{% load i18n %}
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand mb-0 h1" href="{% url 'index' %}">{% trans "Task Manager" %}</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarCollapse" aria-controls="navbarCollapse"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'users:index' %}">{% trans "Users" %}</a>
+        </li>
+        {% if user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'statuses:index' %}">{% trans "Statuses" %}</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'labels:index' %}">{% trans "Labels" %}</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'tasks:index' %}">{% trans "Tasks" %}</a></li>
+          <li class="nav-item">
+            <form class="me-auto mb-2 mb-md-0" action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <input class="btn nav-link" type="submit" value="{% trans 'Log Out' %}">
+            </form>
+        </li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">{% trans "Log In" context "menu_item" %}</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'users:create' %}">{% trans "Sign Up" context "menu_item" %}</a></li>
+        {% endif %}
+      </ul>
+      <form action="{% url 'set_language' %}" method="post" class="d-flex align-items-center ms-auto">
+        {% csrf_token %}
+        <button type="submit" name="language" value="ru"
+                class="btn btn-sm btn-outline-light me-2 {% if LANGUAGE_CODE == 'ru' %}border-white{% endif %}">
+          RU
+        </button>
+        <button type="submit" name="language" value="en"
+                class="btn btn-sm btn-outline-light {% if LANGUAGE_CODE == 'en' %}border-white{% endif %}">
+          EN
+        </button>
+      </form>
+    </div>
+  </div>
+</nav>

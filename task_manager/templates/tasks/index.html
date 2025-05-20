@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load i18n %}
+
+{% block title %}
+  {% trans 'Tasks' %}
+{% endblock %}
+
+{% block content %}
+  <div class="w-100">
+    <div class="col-12">
+        <h1 class="mb-3">{% trans "Tasks" %}</h1>
+        <div class="mb-3">
+        <a href="{% url 'tasks:create' %}" class="btn btn-outline-success">
+            {% trans "Create task" %}
+        </a>
+    </div>
+    <div class="card bg-dark text-white border-dark mb-3">
+      <div class="card-body p-0">
+        <form method="get" class="mb-0">
+          {% bootstrap_form filter.form field_class="bg-dark text-white border-secondary" %}
+          <button type="submit" class="btn btn-outline-light">{% trans 'Show results' %}</button>
+        </form>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-dark table-striped table-borderless align-middle mb-0">
+        <thead class="align-middle">
+          <tr class="border-top border-light border-opacity-25 shadow-sm"> 
+            <th scope="col" class="pt-3">ID</th>
+            <th scope="col" class="pt-3">{% trans 'Name' %}</th>
+            <th scope="col" class="pt-3">{% trans 'Status' %}</th>
+            <th scope="col" class="pt-3">{% trans 'Author' %}</th>
+            <th scope="col" class="pt-3">{% trans 'Executor' %}</th>
+            <th scope="col" class="pt-3">{% trans 'Date created' %}</th>
+            <th scope="col" class="text-center pt-3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for task in tasks %}
+            <tr>
+              <td>{{ task.id }}</td>
+              <td>
+                <a href="{% url 'tasks:detail' task.id %}" class="link-light text-decoration-underline">
+                  {{ task.name }}
+                </a>
+              </td>
+              <td>{{ task.status }}</td>
+              <td>{{ task.author }}</td>
+              <td>{{ task.executor }}</td>
+              <td>{{ task.created_at|date:"d.m.Y H:i" }}</td>
+              <td class="text-center">
+                <div class="d-inline-flex flex-wrap justify-content-center gap-2">
+                  <a href="{% url 'tasks:update' task.id %}" class="btn btn-sm btn-outline-light">
+                    {% trans "Edit" %}
+                  </a>
+                  <a href="{% url 'tasks:delete' task.id %}" class="btn btn-sm btn-outline-danger">
+                    {% trans "Delete" %}
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="7" class="text-center text-white">{% trans "No tasks found." %}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

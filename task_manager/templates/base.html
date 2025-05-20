@@ -1,0 +1,29 @@
+{% load i18n %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% get_current_language as LANGUAGE_CODE %}
+
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>{% block title %}{% endblock %}</title>
+  </head>
+  <body class="d-flex flex-column min-vh-100 text-white bg-dark fs-6 lh-base">
+    <header>
+        {% include "includes/navbar.html" %}
+    </header>
+    <div class="container mt-3">
+      {% bootstrap_messages %}
+    </div>
+    <main class="{% block main_classes %}container flex-grow-1 d-flex align-items-center justify-content-center py-5{% endblock %}">
+      {% block content %}{% endblock %}
+    </main>
+    <footer class="mt-auto py-4">
+        {% include "includes/footer.html" %}
+    </footer>
+  </body>
+</html>

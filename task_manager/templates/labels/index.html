@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Labels" %}{% endblock %}
+{% block main_classes %}container py-5{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <h1 class="mb-3">{% trans "Labels" %}</h1>
+    <div class="mb-4">
+      <a href="{% url 'labels:create' %}" class="btn btn-outline-success">
+        {% trans "Create label" %}
+      </a>
+    </div>
+    {% if labels %}
+      <div class="table-responsive">
+        <table class="table table-dark table-striped table-borderless align-middle mb-0">
+          <thead class="align-middle">
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">{% trans "Name" %}</th>
+              <th scope="col" class="text-end text-nowrap">{% trans "Date created" %}</th>
+              <th scope="col" class="text-center"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for label in labels %}
+              <tr>
+                <td>{{ label.id }}</td>
+                <td>{{ label.name }}</td>
+                <td class="text-end text-nowrap">{{ label.created_at|date:"d.m.Y H:i" }}</td>
+                <td class="text-center">
+                  <div class="d-inline-flex flex-wrap justify-content-center gap-2">
+                    <a href="{% url 'labels:update' label.id %}" class="btn btn-sm btn-outline-light">
+                      {% trans "Edit" %}
+                    </a>
+                    <a href="{% url 'labels:delete' label.id %}" class="btn btn-sm btn-outline-danger">
+                      {% trans "Delete" %}
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="text-white">
+        {% trans "No labels found." %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

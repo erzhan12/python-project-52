@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load django_bootstrap5 %}
+{% block content %}
+
+
+<div class="container wrapper flex-grow-1">
+      
+
+
+    <h1 class="my-4">
+      
+{% translate 'View task' %}
+    </h1>
+    
+<div class="card">
+<div class="card-header bg-secondary text-white">
+  <h2>{{ tasks.name }}</h2>
+</div>
+<div class="card-body bg-light">
+  <p>{{ tasks.description }}</p>
+  <hr>
+  <div class="container">
+    <div class="row p-1">
+      <div class="col">{% translate 'Creator' %}</div>
+      <div class="col">{{tasks.creator}}</div>
+    </div>
+    <div class="row p-1">
+      <div class="col">{% translate 'Executor' %}</div>
+      <div class="col">{{tasks.executor}}</div>
+    </div>
+    <div class="row p-1">
+      <div class="col">{% translate 'Status' %}</div>
+      <div class="col">{{tasks.status}}</div>
+    </div>
+    <div class="row p-1">
+      <div class="col">{% translate 'created at' %}</div>
+      <div class="col">{{tasks.created_at}}</div>
+    </div>
+    <div class="row p-1">
+      <div class="col">
+        <h6>{% translate 'Labels' %}:</h6>
+        <ul>
+          {% for label in tasks.labels.all %}
+            
+          <li>{{label}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="row p-1">
+      <div class="col">
+        <a href="{% url 'tasks:update' tasks.id %}">{% translate 'Update' %}</a>
+        <br>
+        <a href="{% url 'tasks:delete' tasks.id %}">{% translate 'Delete' %}</a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+{% endblock %}

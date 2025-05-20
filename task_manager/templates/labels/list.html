@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+
+
+<h1 class="my-4">
+        
+    {% translate 'Labels' %}
+    
+          </h1>
+          
+    <a class="btn btn-primary mb-3" href="{% url 'labels:create' %}">{% translate 'Create label' %}</a>
+    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>{% translate 'ID' %}</th>
+            <th>{% translate 'Name' %}</th>
+            <th>{% translate 'Creation Date' %}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for label in labels_list %}
+          <tr>
+            <td>{{ label.id }}</td>
+            <td>{{ label.name }}</td>
+            <td>{{ label.created_at }}</td>
+            <td>
+              <a href="{% url 'labels:update' label.id%}">{% translate 'Edit' %}</a>
+              <br>
+              <a href="{% url 'labels:delete' label.id %}">{% translate 'Delete' %}</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      
+{% endblock %}
+      

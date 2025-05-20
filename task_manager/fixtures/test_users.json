@@ -1,0 +1,22 @@
+[
+    {
+      "model": "users.user",
+      "pk": 1,
+      "fields": {
+        "first_name": "John",
+        "last_name": "Snow",
+        "username": "john_snow",
+        "password": "Stark123"
+      }
+    },
+    {
+      "model": "users.user",
+      "pk": 2,
+      "fields": {
+        "first_name": "Daenerys",
+        "last_name": "Targaryen",
+        "username": "daenerys_t",
+        "password": "Dracarys123"
+      }
+    }
+  ]

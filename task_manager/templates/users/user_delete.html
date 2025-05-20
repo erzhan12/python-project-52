@@ -1,0 +1,14 @@
+{% extends "includes/base_form.html" %}
+{% load i18n %}
+
+{% block form_title %}{{ title }}{% endblock %}
+{% block form_heading %}{{ title }}{% endblock %}
+
+{% block extra_fields %}
+  <p class="text-center fs-5">
+    {% trans 'Are you sure you want to delete' %} {{ user.first_name }} {{ user.last_name }}?
+  </p>
+{% endblock %}
+
+{% block button_classes %}btn btn-outline-danger w-100 py-2{% endblock %}
+{% block form_button %}{{ button_name }}{% endblock %}

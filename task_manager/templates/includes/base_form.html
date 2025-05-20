@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% block form_title %}{% endblock %}{% endblock %}
+{% block main_classes %}container py-3{% endblock %}
+
+{% block content %}
+<div class="card mx-auto bg-dark bg-opacity-25 border-secondary col-md-6 col-lg-4">
+  <div class="card-body p-4">
+    <div class="text-center mb-4">
+      <h1 class="h3 mb-2 text-light fw-normal">{% block form_heading %}{% endblock %}</h1>
+      <hr class="border-secondary w-50 mx-auto">
+    </div>
+
+    <form method="post" novalidate class="text-light">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {% for error in form.non_field_errors %}
+            {{ error }}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="row g-2">
+        {% for field in form %}
+          {% include "includes/form_field.html" %}
+        {% endfor %}
+      </div>
+
+      {% block extra_fields %}{% endblock %}
+
+      <div class="col-12 mt-4">
+        <button class="{% block button_classes %}btn btn-outline-success w-100 py-2{% endblock %}" type="submit">
+          {% block form_button %}{% endblock %}
+        </button>
+      </div>
+
+      {% block bottom_text %}{% endblock %}
+    </form>
+  </div>
+</div>
+{% endblock %}

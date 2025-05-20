@@ -1,0 +1,18 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<div class="container d-flex justify-content-end w-100">
+  <div class="text-end text-secondary small">
+    <p class="mb-0">
+      &copy; {% now "Y" %} Task Manager |
+      Developed by
+      <a href="https://github.com/AlishaEvergreen"
+         class="link-light text-decoration-none"
+         onmouseover="this.style.opacity='0.6'"
+         onmouseout="this.style.opacity='1'"
+         target="_blank" rel="noopener noreferrer">
+         AlishaEvergreen
+      </a>
+    </p>
+  </div>
+</div>
