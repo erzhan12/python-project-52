@@ -11,6 +11,7 @@ from task_manager.tasks.models import Task
 
 URL_INDEX = 'tasks:index'
 
+
 class TaskListView(CustomLoginRequiredMixin, FilterView):
     model = Task
     template_name = 'tasks/index.html'
