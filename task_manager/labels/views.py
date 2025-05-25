@@ -15,6 +15,8 @@ from task_manager.mixins import (
     ProtectErrorMixin,
 )
 
+URL_INDEX = 'labels:index'
+
 
 class LabelListView(CustomLoginRequiredMixin, ListView):
     model = Label
@@ -29,7 +31,7 @@ class LabelCreateView(CustomLoginRequiredMixin,
     model = Label
     template_name = 'labels/label_form.html'
     form_class = LabelCreationForm
-    success_url = reverse_lazy("labels:index")
+    success_url = reverse_lazy(URL_INDEX)
     success_message = _('Label was created successfully')
     extra_context = {
         'title': _('Create label'),
@@ -43,7 +45,7 @@ class LabelUpdateView(CustomLoginRequiredMixin,
     form_class = LabelCreationForm
     model = Label
     template_name = 'labels/label_form.html'
-    success_url = reverse_lazy("labels:index")
+    success_url = reverse_lazy(URL_INDEX)
     success_message = _('Label was updated successfully')
     extra_context = {
         'title': _('Update label'),
@@ -57,9 +59,9 @@ class LabelDeleteView(CustomLoginRequiredMixin,
                       DeleteView):
     template_name = 'labels/label_delete.html'
     model = Label
-    success_url = reverse_lazy("labels:index")
+    success_url = reverse_lazy(URL_INDEX)
     success_message = _('Label was deleted successfully')
-    protected_object_url = reverse_lazy('labels:index')
+    protected_object_url = reverse_lazy(URL_INDEX)
     protected_object_message = _(
         'Cannot delete this label because they are being used'
     )
